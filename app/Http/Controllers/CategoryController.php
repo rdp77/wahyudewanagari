@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Template\MainController;
 use App\Models\Category;
-use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Response;
@@ -120,12 +119,9 @@ class CategoryController extends Controller
             Auth::user()->name . ' mengubah kategori'
         );
 
-        $createdBy = Category::find($id)->created_by;
-
         Category::where('id', $id)
             ->update([
                 'name' => $req->name,
-                'created_by' => $createdBy,
                 'updated_by' => Auth::user()->name
             ]);
 

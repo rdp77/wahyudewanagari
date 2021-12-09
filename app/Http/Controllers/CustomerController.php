@@ -3,10 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Template\MainController;
-use App\Models\User;
+use App\Models\Category;
+use App\Models\Customer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Validator;
 use Yajra\DataTables\DataTables;
@@ -33,39 +33,42 @@ class CustomerController extends Controller
     public function index(Request $req)
     {
         if ($req->ajax()) {
-            $data = User::where('id', '!=', Auth::user()->id)->get();
+            $data = Customer::all();
             return DataTables::of($data)
+                ->addIndexColumn()
                 ->addColumn('action', function ($row) {
-                    $actionBtn = '<div class="btn-group">';
-                    $actionBtn .= '<a onclick="reset(' . $row->id . ')" class="btn btn-primary text-white" style="cursor:pointer;">Reset Password</a>';
-                    $actionBtn .= '<button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split"
-                            data-toggle="dropdown">
-                            <span class="sr-only">Toggle Dropdown</span>
-                        </button>';
-                    $actionBtn .= '<div class="dropdown-menu">
-                            <a class="dropdown-item" href="' . route('users.edit', $row->id) . '">Edit</a>';
-                    $actionBtn .= '<a onclick="del(' . $row->id . ')" class="dropdown-item" style="cursor:pointer;">Hapus</a>';
-                    $actionBtn .= '</div></div>';
+                    $actionBtn = '<a href="' . route('customer.edit', $row->id) . '" ';
+                    $actionBtn .= 'class="btn btn-icon icon-left btn-warning text-white mb-1 mt-1 mr-1" style="cursor:pointer;">';
+                    $actionBtn .= '<i class="far fa-edit"></i> Edit</a>';
+                    $actionBtn .= '<button onclick="del(' . $row->id . ')" ';
+                    $actionBtn .= 'class="btn btn-icon icon-left btn-danger text-white mb-1 mt-1">';
+                    $actionBtn .= '<i class="far fa-trash-alt"></i> Hapus</button>';
                     return $actionBtn;
                 })
                 ->rawColumns(['action'])
                 ->make(true);
         }
 
-        return view('pages.backend.data.users.indexUsers');
+        return view('pages.backend.data.customer.indexCustomer');
     }
 
     public function create()
     {
-        return view('pages.backend.data.users.createUsers');
+        $category = Category::all();
+        return view('pages.backend.data.customer.createCustomer', [
+            'category' => $category
+        ]);
     }
 
     public function store(Request $req)
     {
         $validator = Validator::make($req->all(), [
             'name' => ['required', 'string', 'max:255'],
-            'username' => ['required', 'string', 'max:255', 'unique:users'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'category' => ['required'],
+            'tlp' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'max:255'],
+            'address' => ['required', 'string'],
+            'desc' => ['required', 'string'],
         ]);
 
         $validator = $this->MainController
@@ -78,10 +81,13 @@ class CustomerController extends Controller
             ]);
         }
 
-        User::create([
+        Customer::create([
             'name' => $req->name,
-            'username' => $req->username,
-            'password' => Hash::make($req->password),
+            'category_id' => $req->category,
+            'tlp' => $req->tlp,
+            'email' => $req->email,
+            'address' => $req->address,
+            'desc' => $req->desc,
             'created_by' => Auth::user()->name,
             'updated_by' => '',
             'deleted_by' => ''
@@ -90,26 +96,34 @@ class CustomerController extends Controller
         $this->MainController->createLog(
             $req->header('user-agent'),
             $req->ip(),
-            Auth::user()->name . ' membuat pengguna baru'
+            Auth::user()->name . ' membuat customer baru'
         );
 
         return Response::json([
             'status' => 'success',
-            'data' => 'Berhasil membuat pengguna baru'
+            'data' => 'Berhasil membuat customer baru'
         ]);
     }
 
     public function edit($id)
     {
-        $user = User::find($id);
-        return view('pages.backend.data.users.updateUsers', ['user' => $user]);
+        $customer = Customer::find($id);
+        $category = Category::all();
+        return view('pages.backend.data.customer.updateCustomer', [
+            'customer' => $customer,
+            'category' => $category
+        ]);
     }
 
     public function update($id, Request $req)
     {
         $validator = Validator::make($req->all(), [
             'name' => ['required', 'string', 'max:255'],
-            'username' => ['required', 'string', 'max:255', 'unique:users'],
+            'category' => ['required'],
+            'tlp' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'max:255'],
+            'address' => ['required', 'string'],
+            'desc' => ['required', 'string'],
         ]);
 
         $validator = $this->MainController
@@ -125,37 +139,38 @@ class CustomerController extends Controller
         $this->MainController->createLog(
             $req->header('user-agent'),
             $req->ip(),
-            Auth::user()->name . ' mengubah pengguna ' . User::find($id)->name
+            Auth::user()->name . ' mengubah customer'
         );
 
-        $createdBy = User::find($id)->created_by;
-
-        User::where('id', $id)
+        Customer::where('id', $id)
             ->update([
                 'name' => $req->name,
-                'username' => $req->username,
-                'created_by' => $createdBy,
+                'category_id' => $req->category,
+                'tlp' => $req->tlp,
+                'email' => $req->email,
+                'address' => $req->address,
+                'desc' => $req->desc,
                 'updated_by' => Auth::user()->name
             ]);
 
         return Response::json([
             'status' => 'success',
-            'data' => 'Berhasil mengubah pengguna'
+            'data' => 'Berhasil mengubah customer'
         ]);
     }
 
     public function destroy(Request $req, $id)
     {
-        $user = User::find($id);
-        $user->deleted_by = Auth::user()->name;
-        $user->save();
+        $customer = Customer::find($id);
+        $customer->deleted_by = Auth::user()->name;
+        $customer->save();
 
-        User::destroy($id);
+        Customer::destroy($id);
 
         $this->MainController->createLog(
             $req->header('user-agent'),
             $req->ip(),
-            Auth::user()->name . ' menghapus data pengguna ke recycle bin'
+            Auth::user()->name . ' menghapus data customer ke recycle bin'
         );
 
         return Response::json(['status' => 'success']);
@@ -164,35 +179,37 @@ class CustomerController extends Controller
     public function recycle(Request $req)
     {
         if ($req->ajax()) {
-            $data = User::onlyTrashed()->get();
+            $data = Customer::onlyTrashed()->get();
             return Datatables::of($data)
                 ->addColumn('action', function ($row) {
-                    $actionBtn = '<button onclick="restore(' . $row->id . ')" class="btn btn btn-primary 
-                btn-action mb-1 mt-1 mr-1">Kembalikan</button>';
-                    $actionBtn .= '<button onclick="delRecycle(' . $row->id . ')" class="btn btn-danger 
-                    btn-action mb-1 mt-1">Hapus</button>';
+                    $actionBtn = '<button onclick="restore(' . $row->id . ')" ';
+                    $actionBtn .= 'class="btn btn-icon icon-left btn-primary text-white mb-1 mt-1 mr-1">';
+                    $actionBtn .= '<i class="fas fa-redo"></i> Kembalikan</button>';
+                    $actionBtn .= '<button onclick="delRecycle(' . $row->id . ')" ';
+                    $actionBtn .= 'class="btn btn-icon icon-left btn-danger text-white mb-1 mt-1">';
+                    $actionBtn .= '<i class="far fa-trash-alt"></i> Hapus</button>';
                     return $actionBtn;
                 })
                 ->rawColumns(['action'])
                 ->make(true);
         }
-        return view('pages.backend.data.users.recycleUsers');
+        return view('pages.backend.data.customer.recycleCustomer');
     }
 
     public function restore($id, Request $req)
     {
-        User::onlyTrashed()
+        Customer::onlyTrashed()
             ->where('id', $id)
             ->restore();
 
-        $user = User::find($id);
-        $user->deleted_by = '';
-        $user->save();
+        $customer = Customer::find($id);
+        $customer->deleted_by = '';
+        $customer->save();
 
         $this->MainController->createLog(
             $req->header('user-agent'),
             $req->ip(),
-            Auth::user()->name . ' mengembalikan data pengguna'
+            Auth::user()->name . ' mengembalikan data customer'
         );
 
         return Response::json(['status' => 'success']);
@@ -200,14 +217,14 @@ class CustomerController extends Controller
 
     public function delete($id, Request $req)
     {
-        User::onlyTrashed()
+        Customer::onlyTrashed()
             ->where('id', $id)
             ->forceDelete();
 
         $this->MainController->createLog(
             $req->header('user-agent'),
             $req->ip(),
-            Auth::user()->name . ' menghapus data pengguna secara permanen'
+            Auth::user()->name . ' menghapus data customer secara permanen'
         );
 
         return Response::json(['status' => 'success']);
@@ -215,22 +232,22 @@ class CustomerController extends Controller
 
     public function deleteAll(Request $req)
     {
-        $user = User::onlyTrashed()
+        $customer = Customer::onlyTrashed()
             ->forceDelete();
 
-        if ($user == 0) {
+        if ($customer == 0) {
             return Response::json([
                 'status' => 'error',
                 'data' => "Tidak ada data di recycle bin"
             ]);
         } else {
-            $user;
+            $customer;
         }
 
         $this->MainController->createLog(
             $req->header('user-agent'),
             $req->ip(),
-            Auth::user()->name . ' menghapus semua data pengguna secara permanen'
+            Auth::user()->name . ' menghapus semua data customer secara permanen'
         );
 
         return Response::json(['status' => 'success']);
