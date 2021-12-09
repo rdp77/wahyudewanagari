@@ -175,18 +175,18 @@ class CategoryController extends Controller
 
     public function restore($id, Request $req)
     {
-        User::onlyTrashed()
+        Category::onlyTrashed()
             ->where('id', $id)
             ->restore();
 
-        $user = User::find($id);
-        $user->deleted_by = '';
-        $user->save();
+        $category = Category::find($id);
+        $category->deleted_by = '';
+        $category->save();
 
         $this->MainController->createLog(
             $req->header('user-agent'),
             $req->ip(),
-            Auth::user()->name . ' mengembalikan data pengguna'
+            Auth::user()->name . ' mengembalikan data kategori'
         );
 
         return Response::json(['status' => 'success']);
@@ -194,14 +194,14 @@ class CategoryController extends Controller
 
     public function delete($id, Request $req)
     {
-        User::onlyTrashed()
+        Category::onlyTrashed()
             ->where('id', $id)
             ->forceDelete();
 
         $this->MainController->createLog(
             $req->header('user-agent'),
             $req->ip(),
-            Auth::user()->name . ' menghapus data pengguna secara permanen'
+            Auth::user()->name . ' menghapus data kategori secara permanen'
         );
 
         return Response::json(['status' => 'success']);
@@ -209,22 +209,22 @@ class CategoryController extends Controller
 
     public function deleteAll(Request $req)
     {
-        $user = User::onlyTrashed()
+        $category = Category::onlyTrashed()
             ->forceDelete();
 
-        if ($user == 0) {
+        if ($category == 0) {
             return Response::json([
                 'status' => 'error',
                 'data' => "Tidak ada data di recycle bin"
             ]);
         } else {
-            $user;
+            $category;
         }
 
         $this->MainController->createLog(
             $req->header('user-agent'),
             $req->ip(),
-            Auth::user()->name . ' menghapus semua data pengguna secara permanen'
+            Auth::user()->name . ' menghapus semua data kategori secara permanen'
         );
 
         return Response::json(['status' => 'success']);

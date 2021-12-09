@@ -1,13 +1,13 @@
 @extends('layouts.backend.default')
-@section('title', __('pages.title').__(' | Edit Pengguna'))
+@section('title', __('pages.title').__(' | Edit Kategori'))
 @section('backToContent')
-@include('pages.backend.components.backToContent',['url'=>route('users.index')])
+@include('pages.backend.components.backToContent',['url'=>route('category.index')])
 @endsection
-@section('titleContent', __('Edit Pengguna'))
+@section('titleContent', __('Edit Kategori'))
 @section('breadcrumb', __('Data'))
 @section('morebreadcrumb')
-<div class="breadcrumb-item active">{{ __('Pengguna') }}</div>
-<div class="breadcrumb-item active">{{ __('Edit Pengguna') }}</div>
+<div class="breadcrumb-item active">{{ __('Kategori') }}</div>
+<div class="breadcrumb-item active">{{ __('Edit Kategori') }}</div>
 @endsection
 
 @section('content')
@@ -18,13 +18,8 @@
                 <div class="d-block">
                     <label for="name" class="control-label">{{ __('Nama') }}<code>*</code></label>
                 </div>
-                <input id="name" type="text" class="form-control" name="name" value="{{ $user->name }}" required
+                <input id="name" type="text" class="form-control" name="name" value="{{ $category->name }}" required
                     autofocus>
-            </div>
-            <div class="form-group">
-                <label for="username">{{ __('Username') }}<code>*</code></label>
-                <input id="username" type="text" class="form-control" name="username" value="{{ $user->username }}"
-                    required autocomplete="username">
             </div>
         </div>
         <div class="card-footer text-right">
@@ -35,8 +30,8 @@
 @endsection
 @section('script')
 <script>
-    var url = '{{ route('users.update',$user->id) }}';
-    var index = '{{ route('users.index') }}';
+    var url = '{{ route('category.update',$category->id) }}';
+    var index = '{{ route('category.index') }}';
 </script>
 <script src="{{ asset('assets/pages/stored.js') }}"></script>
 @endsection
