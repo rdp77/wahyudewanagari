@@ -26,10 +26,10 @@ Route::group(['prefix' => 'temp'], function () {
     Route::get('/users', [UsersController::class, 'recycle'])
         ->name('users.recycle');
     Route::group(['prefix' => 'users'], function () {
-        Route::get('/restore/{id}', [UsersController::class, 'restore'])
-            ->name('users.restore');;
+        Route::get('/restore/{id}', [UsersController::class, 'restore']);
         Route::delete('/delete/{id}', [UsersController::class, 'delete']);
-        Route::delete('/delete-all', [UsersController::class, 'deleteAll']);
+        Route::delete('/delete-all', [UsersController::class, 'deleteAll'])
+            ->name('users.deleteAll');
     });
 });
 

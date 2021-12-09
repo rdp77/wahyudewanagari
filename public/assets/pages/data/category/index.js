@@ -18,7 +18,7 @@ var table = $("#table").DataTable({
         sEmptyTable: "Belum ada data",
     },
     columns: [
-        { data: "username" },
+        { data: "DT_RowIndex" },
         { data: "name" },
         { data: "action", orderable: false, searchable: true },
     ],
@@ -73,51 +73,24 @@ $(".filter_name").on("keyup", function () {
 function del(id) {
     swal({
         title: "Apakah Anda Yakin?",
-        text: "Aksi ini tidak dapat dikembalikan, dan akan menghapus data pengguna Anda.",
+        text: "Aksi ini tidak dapat dikembalikan, dan akan menghapus data kategori Anda.",
         icon: "warning",
         buttons: true,
         dangerMode: true,
     }).then((willDelete) => {
         if (willDelete) {
             $.ajax({
-                url: "/data/users/" + id,
+                url: "/data/category/" + id,
                 type: "DELETE",
                 success: function () {
-                    swal("Data pengguna berhasil dihapus", {
+                    swal("Data kategori berhasil dihapus", {
                         icon: "success",
                     });
                     table.draw();
                 },
             });
         } else {
-            swal("Data pengguna Anda tidak jadi dihapus!");
-        }
-    });
-}
-
-function reset(id) {
-    swal({
-        title: "Apakah Anda Yakin?",
-        text: "Aksi ini tidak dapat dikembalikan dan mengubah password menjadi default yaitu '1234567890'.",
-        icon: "warning",
-        buttons: true,
-        dangerMode: true,
-    }).then((willDelete) => {
-        if (willDelete) {
-            $.ajax({
-                url: "/users/reset/" + id,
-                type: "POST",
-                success: function () {
-                    swal(
-                        "Password pengguna berhasil diubah menjadi '1234567890'",
-                        {
-                            icon: "success",
-                        }
-                    );
-                },
-            });
-        } else {
-            swal("Data pengguna Anda tidak jadi direset password!");
+            swal("Data kategori Anda tidak jadi dihapus!");
         }
     });
 }
@@ -125,24 +98,24 @@ function reset(id) {
 function delRecycle(id) {
     swal({
         title: "Apakah Anda Yakin?",
-        text: "Aksi ini tidak dapat dikembalikan, dan akan menghapus data pengguna Anda secara permanen.",
+        text: "Aksi ini tidak dapat dikembalikan, dan akan menghapus data kategori Anda secara permanen.",
         icon: "warning",
         buttons: true,
         dangerMode: true,
     }).then((willDelete) => {
         if (willDelete) {
             $.ajax({
-                url: "/temp/users/delete/" + id,
+                url: "/temp/category/delete/" + id,
                 type: "DELETE",
                 success: function () {
-                    swal("Data pengguna berhasil dihapus", {
+                    swal("Data kategori berhasil dihapus", {
                         icon: "success",
                     });
                     table.draw();
                 },
             });
         } else {
-            swal("Data pengguna Anda tidak jadi dihapus!");
+            swal("Data kategori Anda tidak jadi dihapus!");
         }
     });
 }
@@ -150,18 +123,18 @@ function delRecycle(id) {
 function delAll() {
     swal({
         title: "Apakah Anda Yakin?",
-        text: "Aksi ini tidak dapat dikembalikan, dan akan menghapus semua data pengguna Anda secara permanen.",
+        text: "Aksi ini tidak dapat dikembalikan, dan akan menghapus semua data kategori Anda secara permanen.",
         icon: "warning",
         buttons: true,
         dangerMode: true,
     }).then((willDelete) => {
         if (willDelete) {
             $.ajax({
-                url: "/temp/users/delete-all",
+                url: "/temp/category/delete-all",
                 type: "DELETE",
                 success: function (data) {
                     if (data.status == "success") {
-                        swal("Semua data pengguna berhasil dihapus", {
+                        swal("Semua data kategori berhasil dihapus", {
                             icon: "success",
                         });
                         table.draw();
@@ -174,7 +147,7 @@ function delAll() {
                 },
             });
         } else {
-            swal("Semua data pengguna Anda tidak jadi dihapus!");
+            swal("Semua data kategori Anda tidak jadi dihapus!");
         }
     });
 }
@@ -182,24 +155,24 @@ function delAll() {
 function restore(id) {
     swal({
         title: "Apakah Anda Yakin?",
-        text: "Aksi ini mengembalikan data pengguna Anda.",
+        text: "Aksi ini mengembalikan data kategori Anda.",
         icon: "warning",
         buttons: true,
         dangerMode: true,
     }).then((willDelete) => {
         if (willDelete) {
             $.ajax({
-                url: "/temp/users/restore/" + id,
+                url: "/temp/category/restore/" + id,
                 type: "GET",
                 success: function () {
-                    swal("Data pengguna berhasil dikembalikan", {
+                    swal("Data kategori berhasil dikembalikan", {
                         icon: "success",
                     });
                     table.draw();
                 },
             });
         } else {
-            swal("Data pengguna Anda tidak jadi dikembalikan!");
+            swal("Data kategori Anda tidak jadi dikembalikan!");
         }
     });
 }

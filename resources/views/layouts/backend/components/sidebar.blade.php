@@ -31,6 +31,38 @@
                     </li>
                 </ul>
             </li>
+            <li class="nav-item dropdown {{ Request::route()->getName() == 'customer.index' ? 'active' : (
+                Request::route()->getName() == 'customer.create' ? 'active' : (
+                        Request::route()->getName() == 'customer.edit' ? 'active' : (
+                            Request::route()->getName() == 'customer.show' ? 'active' : ''))) }}">
+                <a href="{{ route('customer.index') }}" class="nav-link has-dropdown" data-toggle="dropdown">
+                    <i class="fas fa-user-tie"></i>
+                    <span>{{ __('Customer') }}</span></a>
+                <ul class="dropdown-menu">
+                    <li class="{{ Request::route()->getName() == 'customer.index' ? 'active' : '' }}">
+                        <a class="nav-link" href="{{ route('customer.index') }}">{{ __('Daftar') }}</a>
+                    </li>
+                    <li class="{{ Request::route()->getName() == 'customer.create' ? 'active' : '' }}">
+                        <a class="nav-link" href="{{ route('customer.create') }}">{{ __('Tambah') }}</a>
+                    </li>
+                </ul>
+            </li>
+            <li class="nav-item dropdown {{ Request::route()->getName() == 'category.index' ? 'active' : (
+                Request::route()->getName() == 'category.create' ? 'active' : (
+                        Request::route()->getName() == 'category.edit' ? 'active' : (
+                            Request::route()->getName() == 'category.show' ? 'active' : ''))) }}">
+                <a href="{{ route('category.index') }}" class="nav-link has-dropdown" data-toggle="dropdown">
+                    <i class="fas fa-tags"></i>
+                    <span>{{ __('Kategori') }}</span></a>
+                <ul class="dropdown-menu">
+                    <li class="{{ Request::route()->getName() == 'category.index' ? 'active' : '' }}">
+                        <a class="nav-link" href="{{ route('category.index') }}">{{ __('Daftar') }}</a>
+                    </li>
+                    <li class="{{ Request::route()->getName() == 'category.create' ? 'active' : '' }}">
+                        <a class="nav-link" href="{{ route('category.create') }}">{{ __('Tambah') }}</a>
+                    </li>
+                </ul>
+            </li>
         </ul>
     </aside>
 </div>
