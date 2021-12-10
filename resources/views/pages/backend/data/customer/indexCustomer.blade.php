@@ -23,9 +23,15 @@
             <thead>
                 <tr>
                     <th>
-                        {{ __('Username') }}
+                        {{ __('NO') }}
                     </th>
                     <th>{{ __('Nama') }}</th>
+                    <th>{{ __('Kategori') }}</th>
+                    <th>{{ __('Telepon') }}</th>
+                    <th>{{ __('Email') }}</th>
+                    <th>{{ __('Alamat') }}</th>
+                    <th>{{ __('Dibuat') }}</th>
+                    <th>{{ __('Keterangan') }}</th>
                     <th>{{ __('Aksi') }}</th>
                 </tr>
             </thead>
@@ -39,5 +45,5 @@
 <script>
     var index = '{{ route('customer.index') }}';    
 </script>
-<script src="{{ asset('assets/pages/data/users/index.js') }}"></script>
+<script src="{{ asset('assets/pages/data/customer/index.js') }}"></script>
 @endsection

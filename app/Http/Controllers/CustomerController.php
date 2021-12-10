@@ -6,6 +6,7 @@ use App\Http\Controllers\Template\MainController;
 use App\Models\Category;
 use App\Models\Customer;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Validator;
@@ -36,6 +37,9 @@ class CustomerController extends Controller
             $data = Customer::all();
             return DataTables::of($data)
                 ->addIndexColumn()
+                ->addColumn('category', function ($row) {
+                    return $row->Category->name;
+                })
                 ->addColumn('action', function ($row) {
                     $actionBtn = '<a href="' . route('customer.edit', $row->id) . '" ';
                     $actionBtn .= 'class="btn btn-icon icon-left btn-warning text-white mb-1 mt-1 mr-1" style="cursor:pointer;">';
@@ -45,7 +49,12 @@ class CustomerController extends Controller
                     $actionBtn .= '<i class="far fa-trash-alt"></i> Hapus</button>';
                     return $actionBtn;
                 })
-                ->rawColumns(['action'])
+                ->addColumn('created', function ($row) {
+                    $date = Carbon::parse($row->created_at)->locale('id')->isoFormat('LL');
+                    $time = Carbon::parse($row->created_at)->locale('id')->isoFormat('H:mm');
+                    return $date . " " . $time;
+                })
+                ->rawColumns(['action', 'category', 'created'])
                 ->make(true);
         }
 
@@ -181,6 +190,10 @@ class CustomerController extends Controller
         if ($req->ajax()) {
             $data = Customer::onlyTrashed()->get();
             return Datatables::of($data)
+                ->addIndexColumn()
+                ->addColumn('category', function ($row) {
+                    return $row->Category->name;
+                })
                 ->addColumn('action', function ($row) {
                     $actionBtn = '<button onclick="restore(' . $row->id . ')" ';
                     $actionBtn .= 'class="btn btn-icon icon-left btn-primary text-white mb-1 mt-1 mr-1">';
@@ -190,7 +203,12 @@ class CustomerController extends Controller
                     $actionBtn .= '<i class="far fa-trash-alt"></i> Hapus</button>';
                     return $actionBtn;
                 })
-                ->rawColumns(['action'])
+                ->addColumn('created', function ($row) {
+                    $date = Carbon::parse($row->created_at)->locale('id')->isoFormat('LL');
+                    $time = Carbon::parse($row->created_at)->locale('id')->isoFormat('H:mm');
+                    return $date . " " . $time;
+                })
+                ->rawColumns(['action', 'category', 'created'])
                 ->make(true);
         }
         return view('pages.backend.data.customer.recycleCustomer');

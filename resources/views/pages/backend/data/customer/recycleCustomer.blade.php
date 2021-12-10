@@ -1,5 +1,5 @@
 @extends('layouts.backend.default')
-@section('title', __('pages.title').__(' | Pengguna'))
+@section('title', __('pages.title').__(' | Customer'))
 @section('backToContent')
 <div class="section-header-back">
     <a href="{{ route('users.index') }}" class="btn btn-icon">
@@ -7,10 +7,10 @@
     </a>
 </div>
 @endsection
-@section('titleContent', __('Pengguna'))
+@section('titleContent', __('Customer'))
 @section('breadcrumb', __('Data'))
 @section('morebreadcrumb')
-<div class="breadcrumb-item active">{{ __('Pengguna') }}</div>
+<div class="breadcrumb-item active">{{ __('Customer') }}</div>
 <div class="breadcrumb-item active">{{ __('Recycle Bin') }}</div>
 @endsection
 
@@ -30,9 +30,15 @@
             <thead>
                 <tr>
                     <th>
-                        {{ __('Username') }}
+                        {{ __('NO') }}
                     </th>
                     <th>{{ __('Nama') }}</th>
+                    <th>{{ __('Kategori') }}</th>
+                    <th>{{ __('Telepon') }}</th>
+                    <th>{{ __('Email') }}</th>
+                    <th>{{ __('Alamat') }}</th>
+                    <th>{{ __('Dibuat') }}</th>
+                    <th>{{ __('Keterangan') }}</th>
                     <th>{{ __('Aksi') }}</th>
                 </tr>
             </thead>
@@ -44,7 +50,7 @@
 @endsection
 @section('script')
 <script>
-    var index = '{{ route('users.recycle') }}';
+    var index = '{{ route('customer.recycle') }}';
 </script>
-<script src="{{ asset('assets/pages/data/users/index.js') }}"></script>
+<script src="{{ asset('assets/pages/data/customer/index.js') }}"></script>
 @endsection

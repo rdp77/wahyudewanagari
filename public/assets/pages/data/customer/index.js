@@ -18,8 +18,14 @@ var table = $("#table").DataTable({
         sEmptyTable: "Belum ada data",
     },
     columns: [
-        { data: "username" },
+        { data: "DT_RowIndex" },
         { data: "name" },
+        { data: "category" },
+        { data: "tlp" },
+        { data: "email" },
+        { data: "address" },
+        { data: "created" },
+        { data: "desc" },
         { data: "action", orderable: false, searchable: true },
     ],
     buttons: [
@@ -73,51 +79,24 @@ $(".filter_name").on("keyup", function () {
 function del(id) {
     swal({
         title: "Apakah Anda Yakin?",
-        text: "Aksi ini tidak dapat dikembalikan, dan akan menghapus data pengguna Anda.",
+        text: "Aksi ini tidak dapat dikembalikan, dan akan menghapus data customer Anda.",
         icon: "warning",
         buttons: true,
         dangerMode: true,
     }).then((willDelete) => {
         if (willDelete) {
             $.ajax({
-                url: "/data/users/" + id,
+                url: "/data/customer/" + id,
                 type: "DELETE",
                 success: function () {
-                    swal("Data pengguna berhasil dihapus", {
+                    swal("Data customer berhasil dihapus", {
                         icon: "success",
                     });
                     table.draw();
                 },
             });
         } else {
-            swal("Data pengguna Anda tidak jadi dihapus!");
-        }
-    });
-}
-
-function reset(id) {
-    swal({
-        title: "Apakah Anda Yakin?",
-        text: "Aksi ini tidak dapat dikembalikan dan mengubah password menjadi default yaitu '1234567890'.",
-        icon: "warning",
-        buttons: true,
-        dangerMode: true,
-    }).then((willDelete) => {
-        if (willDelete) {
-            $.ajax({
-                url: "/users/reset/" + id,
-                type: "POST",
-                success: function () {
-                    swal(
-                        "Password pengguna berhasil diubah menjadi '1234567890'",
-                        {
-                            icon: "success",
-                        }
-                    );
-                },
-            });
-        } else {
-            swal("Data pengguna Anda tidak jadi direset password!");
+            swal("Data customer Anda tidak jadi dihapus!");
         }
     });
 }
@@ -125,24 +104,24 @@ function reset(id) {
 function delRecycle(id) {
     swal({
         title: "Apakah Anda Yakin?",
-        text: "Aksi ini tidak dapat dikembalikan, dan akan menghapus data pengguna Anda secara permanen.",
+        text: "Aksi ini tidak dapat dikembalikan, dan akan menghapus data customer Anda secara permanen.",
         icon: "warning",
         buttons: true,
         dangerMode: true,
     }).then((willDelete) => {
         if (willDelete) {
             $.ajax({
-                url: "/temp/users/delete/" + id,
+                url: "/temp/customer/delete/" + id,
                 type: "DELETE",
                 success: function () {
-                    swal("Data pengguna berhasil dihapus", {
+                    swal("Data customer berhasil dihapus", {
                         icon: "success",
                     });
                     table.draw();
                 },
             });
         } else {
-            swal("Data pengguna Anda tidak jadi dihapus!");
+            swal("Data customer Anda tidak jadi dihapus!");
         }
     });
 }
@@ -150,18 +129,18 @@ function delRecycle(id) {
 function delAll() {
     swal({
         title: "Apakah Anda Yakin?",
-        text: "Aksi ini tidak dapat dikembalikan, dan akan menghapus semua data pengguna Anda secara permanen.",
+        text: "Aksi ini tidak dapat dikembalikan, dan akan menghapus semua data customer Anda secara permanen.",
         icon: "warning",
         buttons: true,
         dangerMode: true,
     }).then((willDelete) => {
         if (willDelete) {
             $.ajax({
-                url: "/temp/users/delete-all",
+                url: "/temp/customer/delete-all",
                 type: "DELETE",
                 success: function (data) {
                     if (data.status == "success") {
-                        swal("Semua data pengguna berhasil dihapus", {
+                        swal("Semua data customer berhasil dihapus", {
                             icon: "success",
                         });
                         table.draw();
@@ -174,7 +153,7 @@ function delAll() {
                 },
             });
         } else {
-            swal("Semua data pengguna Anda tidak jadi dihapus!");
+            swal("Semua data customer Anda tidak jadi dihapus!");
         }
     });
 }
@@ -182,24 +161,24 @@ function delAll() {
 function restore(id) {
     swal({
         title: "Apakah Anda Yakin?",
-        text: "Aksi ini mengembalikan data pengguna Anda.",
+        text: "Aksi ini mengembalikan data customer Anda.",
         icon: "warning",
         buttons: true,
         dangerMode: true,
     }).then((willDelete) => {
         if (willDelete) {
             $.ajax({
-                url: "/temp/users/restore/" + id,
+                url: "/temp/customer/restore/" + id,
                 type: "GET",
                 success: function () {
-                    swal("Data pengguna berhasil dikembalikan", {
+                    swal("Data customer berhasil dikembalikan", {
                         icon: "success",
                     });
                     table.draw();
                 },
             });
         } else {
-            swal("Data pengguna Anda tidak jadi dikembalikan!");
+            swal("Data customer Anda tidak jadi dikembalikan!");
         }
     });
 }
